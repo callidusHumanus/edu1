@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Edu 1 Beta Testers</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout concept: a fixed WebGL lab (knot, atom, helix) sits behind a scrolling page. Sections tilt in
+   from depth, and the application is a four-face wizard whose steps swing in and out on a 3D hinge. */
+:root{
+  --bg:#050816;--ink:#f1f5ff;--mute:#9fb0d3;--line:rgba(160,200,255,.18);
+  --glass:rgba(11,20,46,.62);--a:#35c8ff;--b:#a58bff;--c:#ff6b9a;--d:#4cf0b0;--warn:#ff8a9b;
+  --grad:linear-gradient(110deg,var(--a),var(--b) 50%,var(--c));
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  overflow-x:hidden;position:relative}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+.veil{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(80% 60% at 50% 0%,rgba(53,200,255,.12),transparent 70%),linear-gradient(to bottom,rgba(5,8,22,.15),rgba(5,8,22,.7))}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto}
+.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}
+.grad-t{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:shimmer 8s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+
+/* nav */
+nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:16px}
+.brand{display:flex;align-items:center;gap:10px;font:800 1rem/1 var(--f-body)}
+.logo{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:var(--grad);color:#050816;font:900 13px/1 var(--f-display);box-shadow:0 8px 24px -8px var(--b)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:16px;padding:14px 22px;font:700 .85rem/1 var(--f-display);color:#050816;background:var(--grad);background-size:200% 100%;box-shadow:0 14px 36px -14px var(--c);transition:transform .2s,background-position .6s}
+.btn:hover{transform:translateY(-2px) scale(1.02);background-position:100% 0}
+.btn svg{width:18px;height:18px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.sm{padding:11px 16px;font-size:.75rem;border-radius:14px}
+.btn[disabled]{opacity:.6;cursor:wait}
+
+/* hero */
+.hero{padding-block:clamp(28px,7vw,84px) 40px;perspective:1200px}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--d);box-shadow:0 0 0 0 var(--d);animation:ping 1.8s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(76,240,176,.7)}100%{box-shadow:0 0 0 12px transparent}}
+.hero h1{margin:18px 0 16px;font:900 clamp(2.2rem,8.2vw,4.9rem)/1 var(--f-display);letter-spacing:-.03em;text-wrap:balance;transform-style:preserve-3d;animation:titleIn 1.1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes titleIn{from{opacity:0;transform:rotateX(55deg) translateY(40px) translateZ(-120px)}to{opacity:1;transform:none}}
+.hero p.lead{max-width:56ch;margin:0 0 26px;font-size:clamp(1rem,2.6vw,1.2rem);color:#cfdcf6}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:34px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.fact{padding:16px 18px;border-radius:20px;transform-style:preserve-3d}
+.fact b{display:block;font:700 1.05rem/1.2 var(--f-display);margin-bottom:4px}
+.fact span{color:var(--mute);font-size:.9rem}
+
+/* sections */
+section{padding-block:clamp(32px,6vw,64px)}
+.eyebrow{font:500 11px/1 var(--f-mono);letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin:0 0 12px}
+h2{margin:0 0 22px;font:800 clamp(1.5rem,5vw,2.5rem)/1.08 var(--f-display);letter-spacing:-.02em;text-wrap:balance}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;perspective:1200px}
+.card{padding:22px;border-radius:24px;transform-style:preserve-3d;transition:transform .25s ease-out,box-shadow .25s;will-change:transform}
+.card:hover{box-shadow:0 30px 60px -30px var(--k,var(--a))}
+.card .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;margin-bottom:14px;background:color-mix(in srgb,var(--k,var(--a)) 18%,transparent);color:var(--k,var(--a));transform:translateZ(36px)}
+.card .ic svg{width:24px;height:24px}
+.card h3{margin:0 0 6px;font:700 1.02rem/1.25 var(--f-body);transform:translateZ(24px)}
+.card p{margin:0;color:var(--mute);font-size:.95rem;transform:translateZ(12px)}
+.reqs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.reqs li{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:18px;transform-style:preserve-3d}
+.reqs .tick{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--grad);color:#050816}
+.reqs .tick svg{width:15px;height:15px}
+.reqs b{display:block}
+.reqs span{color:var(--mute);font-size:.92rem}
+.pre{opacity:0;transform:perspective(1200px) rotateX(38deg) translateY(50px) translateZ(-120px)}
+.rv{transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+
+/* wizard */
+.portal{perspective:1800px;padding:clamp(18px,4vw,34px);border-radius:32px;position:relative;overflow:hidden}
+.portal::before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent,rgba(165,139,255,.18),transparent 30%,rgba(53,200,255,.16),transparent 60%);animation:spin 16s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.portal>*{position:relative}
+.prog{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:26px}
+.orb{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;font:500 10px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.orb i{position:relative;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font:700 13px/1 var(--f-display);font-style:normal;border:1px solid var(--line);background:rgba(255,255,255,.04);transition:all .5s;transform-style:preserve-3d}
+.orb.on i{background:var(--grad);color:#050816;border-color:transparent;box-shadow:0 10px 30px -8px var(--b);transform:rotateY(360deg) scale(1.1)}
+.orb.done i{background:var(--d);color:#050816;border-color:transparent}
+.orb.on,.orb.done{color:var(--ink)}
+.bar{height:4px;border-radius:4px;background:rgba(255,255,255,.1);margin:-8px 0 26px;overflow:hidden}
+.bar i{display:block;height:100%;width:25%;background:var(--grad);border-radius:4px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.steps{position:relative;transform-style:preserve-3d}
+.step{display:none}
+.step.active{display:block;animation:enterF .85s cubic-bezier(.2,.8,.2,1) both;transform-origin:left center}
+.step.active.back{animation-name:enterB;transform-origin:right center}
+.step.leaving{display:block;position:absolute;top:0;left:0;right:0;pointer-events:none;animation:leaveF .6s cubic-bezier(.5,0,.8,.4) both;transform-origin:right center}
+.step.leaving.back{animation-name:leaveB;transform-origin:left center}
+@keyframes enterF{from{opacity:0;transform:perspective(1500px) rotateY(80deg) translateX(100px) translateZ(-260px)}to{opacity:1;transform:none}}
+@keyframes enterB{from{opacity:0;transform:perspective(1500px) rotateY(-80deg) translateX(-100px) translateZ(-260px)}to{opacity:1;transform:none}}
+@keyframes leaveF{to{opacity:0;transform:perspective(1500px) rotateY(-80deg) translateX(-100px) translateZ(-260px)}}
+@keyframes leaveB{to{opacity:0;transform:perspective(1500px) rotateY(80deg) translateX(100px) translateZ(-260px)}}
+.step h3{margin:0 0 4px;font:800 1.35rem/1.15 var(--f-display);letter-spacing:-.01em}
+.step .sub{margin:0 0 22px;color:var(--mute)}
+.fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field.full{grid-column:1/-1}
+.field>label,.field>.lab{font:700 .85rem/1.3 var(--f-body)}
+.field small{color:var(--mute);font-size:.8rem}
+input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;min-width:0;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(4,10,28,.7);transition:border-color .2s,box-shadow .2s,transform .2s}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--mute) 50%),linear-gradient(135deg,var(--mute) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
+textarea{min-height:128px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 4px rgba(53,200,255,.16);transform:translateZ(0) scale(1.01)}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opt{position:relative;flex:1 1 150px;min-width:0}
+.opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.opt span{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(4,10,28,.7);font-weight:600;font-size:.93rem;transition:transform .25s,border-color .25s,background .25s,box-shadow .25s}
+.opt span::before{content:"";flex:none;width:16px;height:16px;border-radius:50%;border:2px solid var(--mute);transition:all .25s}
+.opt.ck span::before{border-radius:5px}
+.opt:hover span{transform:translateY(-2px) rotateX(8deg)}
+.opt input:checked+span{border-color:var(--a);background:rgba(53,200,255,.12);box-shadow:0 12px 28px -14px var(--a);transform:translateY(-2px) rotateX(10deg)}
+.opt input:checked+span::before{border-color:var(--a);background:var(--a);box-shadow:inset 0 0 0 3px #050816}
+.opt input:focus-visible+span{outline:2px solid var(--a);outline-offset:2px}
+.q{padding:16px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin-bottom:12px}
+.q .lab{display:flex;gap:10px;margin-bottom:12px;font-weight:700}
+.q .lab em{flex:none;font:500 11px/1.9 var(--f-mono);font-style:normal;color:var(--b)}
+.q .opt{flex-basis:44%}
+.wc{display:flex;justify-content:space-between;gap:10px;font:500 11px/1 var(--f-mono);color:var(--mute)}
+.wc.bad{color:var(--warn)}
+.field.bad>input,.field.bad>select,.field.bad>textarea,.field.bad .opt span,.q.bad{border-color:var(--warn)}
+.err{display:none;color:var(--warn);font-size:.82rem;font-weight:600}
+.field.bad .err,.q.bad .err{display:block}
+.q.bad{animation:shake .5s}
+.field.bad{animation:shake .5s}
+@keyframes shake{20%{transform:perspective(600px) rotateY(10deg) translateX(-8px)}40%{transform:perspective(600px) rotateY(-10deg) translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:26px;flex-wrap:wrap}
+.sum{display:grid;gap:10px;margin-bottom:20px}
+.sum div{display:flex;justify-content:space-between;gap:16px;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:.93rem}
+.sum span{color:var(--mute)}
+.sum b{text-align:right;min-width:0;overflow-wrap:anywhere}
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:.93rem;color:#d6e2fa}
+.chk input{margin-top:4px;width:18px;height:18px;accent-color:var(--a);flex:none}
+.hp{position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden}
+.status{display:none;text-align:center;padding:26px 6px}
+.status.show{display:block;animation:enterF .9s both}
+.status h3{font:800 1.5rem/1.15 var(--f-display);margin:18px 0 10px}
+.status p{margin:0 auto 18px;max-width:46ch;color:#cfdcf6}
+.cube{width:84px;height:84px;margin:6px auto 0;position:relative;transform-style:preserve-3d;animation:cube 6s linear infinite}
+.cube i{position:absolute;inset:0;border:2px solid var(--d);background:rgba(76,240,176,.1);box-shadow:0 0 24px rgba(76,240,176,.4)}
+.cube i:nth-child(1){transform:translateZ(42px)}.cube i:nth-child(2){transform:rotateY(180deg) translateZ(42px)}
+.cube i:nth-child(3){transform:rotateY(90deg) translateZ(42px)}.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(42px)}
+.cube i:nth-child(5){transform:rotateX(90deg) translateZ(42px)}.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(42px)}
+.cube.bad i{border-color:var(--warn);background:rgba(255,138,155,.1);box-shadow:0 0 24px rgba(255,138,155,.4)}
+@keyframes cube{to{transform:rotateX(360deg) rotateY(360deg)}}
+.row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.mailbox{display:inline-block;margin:0 0 16px;padding:8px 12px;border-radius:10px;border:1px dashed var(--line);font:500 13px/1 var(--f-mono);user-select:all}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(5,8,22,.3);border-top-color:#050816;animation:spin 1s linear infinite;display:none}
+.btn[disabled] .spin{display:inline-block}
+footer{padding-block:40px 60px;color:var(--mute);font-size:.88rem;text-align:center}
+@media (max-width:640px){
+  .fg{grid-template-columns:minmax(0,1fr)}
+  .q .opt{flex-basis:100%}
+  .orb{font-size:9px}
+  .nav .btn{flex:1}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .pre{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+
+[hidden]{display:none!important}
+img{max-width:100%}
+</style>
+</head>
+<body>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="veil"></div>
+
+<div class="wrap">
+  <nav>
+    <a class="brand" href="#top"><span class="logo">E1</span>Edu 1 Labs</a>
+    <a class="btn sm" href="#apply">Apply now</a>
+  </nav>
+
+  <header class="hero" id="top">
+    <span class="pill glass"><i></i>Now hiring · Paid contract</span>
+    <h1>Test the lab.<br><span class="grad-t">Get paid.</span></h1>
+    <p class="lead">Edu 1 Labs is a virtual science lab for students. We are hiring student beta testers who know chemistry, physics or biology to run experiments, catch mistakes and help us improve the product before launch.</p>
+    <div class="cta-row">
+      <a class="btn" href="#apply">Start your application
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn ghost" href="#requirements">See requirements</a>
+    </div>
+    <div class="facts">
+      <div class="fact glass"><b>Paid contract</b><span>Rate shared with selected testers</span></div>
+      <div class="fact glass"><b>100% remote</b><span>Work from your phone or laptop</span></div>
+      <div class="fact glass"><b>Flexible hours</b><span>Fit it around your classes</span></div>
+      <div class="fact glass"><b>Early access</b><span>Use Edu 1 Labs before the public</span></div>
+    </div>
+  </header>
+
+  <section id="role">
+    <p class="eyebrow">The role</p>
+    <h2>What a beta tester does</h2>
+    <div class="grid">
+      <article class="card glass rv" style="--k:#35c8ff"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2.2h12.4a1.5 1.5 0 0 0 1.3-2.2L14 9V3"/></svg></div><h3>Run experiments</h3><p>Work through virtual chemistry, physics and biology labs the way a student would.</p></article>
+      <article class="card glass rv" style="--k:#4cf0b0"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div><h3>Check the science</h3><p>Spot wrong formulas, units, labels and results, and tell us what the correct answer is.</p></article>
+      <article class="card glass rv" style="--k:#ff6b9a"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2l1.5 2M16 2l-1.5 2M3 13h3M18 13h3M5 7l2 2M19 7l-2 2M7 20l2-2M17 20l-2-2"/><rect x="8" y="6" width="8" height="14" rx="4"/></svg></div><h3>Report bugs clearly</h3><p>Write short, precise reports with the steps that caused the problem.</p></article>
+      <article class="card glass rv" style="--k:#a58bff"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg></div><h3>Suggest improvements</h3><p>Tell us what would make a lab clearer, more fun and more useful for your classmates.</p></article>
+    </div>
+  </section>
+
+  <section id="requirements">
+    <p class="eyebrow">Qualifications</p>
+    <h2>Who we are looking for</h2>
+    <ul class="reqs">
+      <li class="glass rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Currently enrolled student</b><span>In secondary school, college or university, right now.</span></div></li>
+      <li class="glass rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Strong in chemistry, physics or biology</b><span>Solid knowledge of at least one, and you can explain it clearly.</span></div></li>
+      <li class="glass rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><div><b>18 or older, or with guardian consent</b><span>Under-18 applicants need a parent or guardian to agree.</span></div></li>
+      <li class="glass rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><div><b>At least 3 hours a week</b><span>Reliable time for testing during the contract period.</span></div></li>
+      <li class="glass rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><div><b>A phone or computer with internet</b><span>Stable enough to load 3D labs and send feedback.</span></div></li>
+      <li class="glass rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Clear written English</b><span>You can describe a problem so anyone can repeat it.</span></div></li>
+      <li class="glass rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><div><b>An eye for detail</b><span>You notice the wrong unit, the odd result and the broken button.</span></div></li>
+      <li class="glass rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Reliable and responsive</b><span>You meet deadlines and reply to messages within two days.</span></div></li>
+    </ul>
+  </section>
+
+  <section id="apply">
+    <p class="eyebrow">Apply</p>
+    <h2>Four short steps. About 10 minutes.</h2>
+    <div class="portal glass" id="portal">
+      <div class="prog" id="prog" aria-label="Progress">
+        <div class="orb on"><i>1</i>Contact</div>
+        <div class="orb"><i>2</i>Quiz</div>
+        <div class="orb"><i>3</i>Essays</div>
+        <div class="orb"><i>4</i>Review</div>
+      </div>
+      <div class="bar"><i id="barfill"></i></div>
+
+      <form id="form" novalidate autocomplete="on">
+        <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" id="hp" tabindex="-1" autocomplete="off"></label></div>
+        <div class="steps" id="steps">
+
+          <div class="step active" data-i="0">
+            <h3>Your details</h3>
+            <p class="sub">We use these only to contact you about this role.</p>
+            <div class="fg">
+              <div class="field" data-req><label for="name">Full name</label><input id="name" type="text" autocomplete="name" placeholder="Jane Wanjiru"><span class="err">Enter your full name.</span></div>
+              <div class="field" data-req data-type="email"><label for="email">Email</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com"><span class="err">Enter a valid email address.</span></div>
+              <div class="field" data-req><label for="phone">Phone or WhatsApp</label><input id="phone" type="tel" autocomplete="tel" placeholder="+254 7XX XXX XXX"><span class="err">Enter a phone number.</span></div>
+              <div class="field" data-req><label for="place">City and country</label><input id="place" type="text" autocomplete="address-level2" placeholder="Nairobi, Kenya"><span class="err">Enter your city and country.</span></div>
+              <div class="field" data-req><label for="school">School or university</label><input id="school" type="text" placeholder="Name of your institution"><span class="err">Enter your institution.</span></div>
+              <div class="field" data-req><label for="level">Level of study</label>
+                <select id="level"><option value="">Choose one</option><option>Secondary school</option><option>College or diploma</option><option>Undergraduate</option><option>Postgraduate</option></select><span class="err">Choose your level.</span></div>
+              <div class="field" data-req><label for="course">Course or class</label><input id="course" type="text" placeholder="e.g. BSc Chemistry, Form 4"><span class="err">Enter your course or class.</span></div>
+              <div class="field" data-req><label for="grad">Expected completion year</label><input id="grad" type="text" inputmode="numeric" maxlength="4" placeholder="2028"><span class="err">Enter a year, such as 2028.</span></div>
+              <div class="field full" data-req data-group="enrolled"><span class="lab">Are you currently enrolled as a student?</span>
+                <div class="opts"><label class="opt"><input type="radio" name="enrolled" value="Yes"><span>Yes, I am enrolled</span></label><label class="opt"><input type="radio" name="enrolled" value="No"><span>No</span></label></div>
+                <span class="err" id="enrolledErr">Choose an answer. Only currently enrolled students can apply.</span></div>
+              <div class="field full" data-req data-group="subjects"><span class="lab">Subjects you know well (pick all that apply)</span>
+                <div class="opts"><label class="opt ck"><input type="checkbox" name="subjects" value="Chemistry"><span>Chemistry</span></label><label class="opt ck"><input type="checkbox" name="subjects" value="Physics"><span>Physics</span></label><label class="opt ck"><input type="checkbox" name="subjects" value="Biology"><span>Biology</span></label></div>
+                <span class="err">Pick at least one subject.</span></div>
+            </div>
+          </div>
+
+          <div class="step" data-i="1">
+            <h3>Quick check</h3>
+            <p class="sub">Seven questions, one answer each. Your best guess is fine.</p>
+            <div class="fg">
+              <div class="field" data-req data-group="hours"><span class="lab">Hours you can give each week</span>
+                <div class="opts"><label class="opt"><input type="radio" name="hours" value="3 to 5"><span>3 to 5</span></label><label class="opt"><input type="radio" name="hours" value="6 to 10"><span>6 to 10</span></label><label class="opt"><input type="radio" name="hours" value="10 or more"><span>10 or more</span></label></div>
+                <span class="err">Choose your weekly hours.</span></div>
+              <div class="field" data-req data-group="device"><span class="lab">Main device for testing</span>
+                <div class="opts"><label class="opt"><input type="radio" name="device" value="Phone"><span>Phone</span></label><label class="opt"><input type="radio" name="device" value="Laptop or desktop"><span>Laptop or PC</span></label><label class="opt"><input type="radio" name="device" value="Tablet"><span>Tablet</span></label></div>
+                <span class="err">Choose a device.</span></div>
+            </div>
+            <div id="quiz" style="margin-top:18px"></div>
+          </div>
+
+          <div class="step" data-i="2">
+            <h3>Three short essays</h3>
+            <p class="sub">Keep each between 25 and 100 words. Be specific and plain.</p>
+            <div class="fg" id="essays"></div>
+          </div>
+
+          <div class="step" data-i="3">
+            <h3>Review and send</h3>
+            <p class="sub">Your application is sent to our team as a PDF.</p>
+            <div class="sum" id="sum"></div>
+            <div class="field" data-req data-group="agree"><label class="chk"><input type="checkbox" id="agree"><span>I confirm my answers are true, I am currently enrolled, I am 18 or older or have guardian consent, and I agree to be contacted about this role.</span></label><span class="err">Please tick the box to confirm.</span></div>
+          </div>
+        </div>
+
+        <div class="nav" id="navbtns">
+          <button type="button" class="btn ghost" id="prev" hidden>Back</button>
+          <button type="button" class="btn" id="next" style="margin-left:auto">Next</button>
+          <button type="submit" class="btn" id="send" hidden><span class="spin"></span><span id="sendt">Send application</span></button>
+        </div>
+      </form>
+
+      <div class="status" id="ok" role="status">
+        <div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <h3>Application received</h3>
+        <p>Thank you. Your application reference is <b id="ref"></b>. We will contact shortlisted applicants by email or WhatsApp.</p>
+      </div>
+      <div class="status" id="fail" role="alert">
+        <div class="cube bad"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <h3>We could not send it</h3>
+        <p id="failmsg">The connection failed. Your answers are safe on this page.</p>
+        <div class="mailbox" id="mailaddr"></div>
+        <div class="row"><button type="button" class="btn" id="retry">Try again</button><button type="button" class="btn ghost" id="dl">Download PDF</button></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Edu 1 Labs · Beta tester programme · <a href="https://www.edu1app.tech/products/edu1labs" target="_blank" rel="noopener" style="text-decoration:underline">edu1app.tech</a></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="config.js"></script>
+<script>
+(function(){
+'use strict';
+var CONFIG={
+  email:'k36218164@gmail.com',
+  endpoint:'https://formsubmit.co/ajax/k36218164@gmail.com',
+  site:'https://www.edu1app.tech/products/edu1labs',
+  supabase:{
+    url:'',   /* paste your Supabase Project URL between the quotes, e.g. https://abcd1234.supabase.co */
+    key:''    /* paste your Supabase anon public key between the quotes */
+  }
+};
+if(window.EDU1_CONFIG)CONFIG.supabase=window.EDU1_CONFIG;
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- content ---------- */
+var QUIZ=[
+ {q:'Which unit measures force?',o:['Joule','Newton','Pascal','Watt'],a:1,s:'Physics'},
+ {q:'Which organelle produces most of a cell’s ATP?',o:['Ribosome','Golgi body','Mitochondrion','Nucleus'],a:2,s:'Biology'},
+ {q:'What is the pH of pure water at 25°C?',o:['1','7','10','14'],a:1,s:'Chemistry'},
+ {q:'A 2 kg mass accelerates at 3 m/s². What is the net force?',o:['1.5 N','5 N','6 N','9 N'],a:2,s:'Physics'},
+ {q:'Which base pairs with adenine in DNA?',o:['Guanine','Cytosine','Uracil','Thymine'],a:3,s:'Biology'},
+ {q:'How many molecules are in one mole of a substance?',o:['6.022 × 10²³','3.0 × 10⁸','9.81','1.6 × 10⁻¹⁹'],a:0,s:'Chemistry'},
+ {q:'Which detail makes a bug report most useful?',o:['How annoyed you felt','The exact steps to repeat it','A guess at who caused it','A long story about your day'],a:1,s:'Testing'}
+];
+var ESS=[
+ {id:'e1',t:'Teach it',p:'Explain one chemistry, physics or biology idea to a first-year student. Choose a topic you know well.'},
+ {id:'e2',t:'Spot the error',p:'Describe a time you found a mistake in a lab, textbook or app. What did you do about it?'},
+ {id:'e3',t:'Why you',p:'Why should we pick you, and what one change would make a virtual lab better?'}
+];
+var quizBox=$('#quiz');
+QUIZ.forEach(function(it,i){
+  var d=document.createElement('div');d.className='q';d.setAttribute('data-req','');d.setAttribute('data-group','q'+i);
+  var h='<div class="lab"><em>Q'+(i+1)+'</em><span>'+it.q+'</span></div><div class="opts">';
+  it.o.forEach(function(o,j){h+='<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"><span>'+o+'</span></label>'});
+  d.innerHTML=h+'</div><span class="err" style="margin-top:8px">Choose an answer.</span>';
+  quizBox.appendChild(d);
+});
+var essBox=$('#essays');
+ESS.forEach(function(e,i){
+  var d=document.createElement('div');d.className='field full';d.setAttribute('data-req','');d.setAttribute('data-essay','');
+  d.innerHTML='<label for="'+e.id+'">Essay '+(i+1)+': '+e.t+'</label><small>'+e.p+'</small><textarea id="'+e.id+'" placeholder="Write 25 to 100 words"></textarea><div class="wc"><span class="err" style="display:inline">Write between 25 and 100 words.</span><span id="'+e.id+'c">0 / 100 words</span></div>';
+  essBox.appendChild(d);
+});
+function words(s){s=s.trim();return s?s.split(/\s+/).length:0}
+ESS.forEach(function(e){
+  var t=$('#'+e.id),c=$('#'+e.id+'c');
+  t.addEventListener('input',function(){var n=words(t.value);c.textContent=n+' / 100 words';c.parentNode.classList.toggle('bad',n>100)});
+});
+
+/* ---------- wizard ---------- */
+var steps=$$('.step'),orbs=$$('.orb'),cur=0,busy=false,pdfCache=null;
+var prev=$('#prev'),next=$('#next'),send=$('#send');
+function val(id){return ($('#'+id).value||'').trim()}
+function checked(name){var e=$('input[name="'+name+'"]:checked');return e?e.value:''}
+function checkedAll(name){return $$('input[name="'+name+'"]:checked').map(function(e){return e.value})}
+function validate(i){
+  var bad=[],box=steps[i];
+  $$('[data-req]',box).forEach(function(f){
+    var ok=true;
+    if(f.hasAttribute('data-group')){
+      var g=f.getAttribute('data-group');
+      if(g==='agree')ok=$('#agree').checked;
+      else if(g==='enrolled')ok=checked('enrolled')==='Yes';
+      else ok=!!$('input[name="'+g+'"]:checked',f);
+      if(g==='enrolled'&&checked('enrolled')==='No')$('#enrolledErr').textContent='Sorry, only currently enrolled students can apply for this role.';
+      else if(g==='enrolled')$('#enrolledErr').textContent='Choose an answer. Only currently enrolled students can apply.';
+    }else if(f.hasAttribute('data-essay')){
+      var n=words($('textarea',f).value);ok=n>=25&&n<=100;
+    }else{
+      var inp=$('input,select',f),v=inp.value.trim();ok=!!v;
+      if(ok&&f.getAttribute('data-type')==='email')ok=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+      if(ok&&inp.id==='grad')ok=/^20\d\d$/.test(v);
+    }
+    f.classList.toggle('bad',!ok);
+    if(!ok){bad.push(f);void f.offsetWidth}
+  });
+  if(bad.length){bad[0].scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'})}
+  return !bad.length;
+}
+$('#portal').addEventListener('input',function(e){var f=e.target.closest('.bad');if(f)f.classList.remove('bad')});
+$('#portal').addEventListener('change',function(e){var f=e.target.closest('.bad');if(f)f.classList.remove('bad')});
+
+function buildSummary(){
+  var sc=score();
+  var rows=[['Name',val('name')],['Email',val('email')],['Phone',val('phone')],['Location',val('place')],['Institution',val('school')+' ('+val('level')+')'],['Subjects',checkedAll('subjects').join(', ')],['Quiz answered',QUIZ.length+' of '+QUIZ.length],['Essays',ESS.map(function(e){return words($('#'+e.id).value)}).join(' / ')+' words']];
+  $('#sum').innerHTML=rows.map(function(r){return '<div><span>'+r[0]+'</span><b></b></div>'}).join('');
+  $$('#sum b').forEach(function(b,i){b.textContent=rows[i][1]});
+  void sc;
+}
+function go(n,back){
+  if(n===cur||busy)return;
+  var old=steps[cur],nw=steps[n];
+  old.classList.remove('active');old.classList.add('leaving');if(back)old.classList.add('back');
+  old.addEventListener('animationend',function h(){old.classList.remove('leaving','back');old.removeEventListener('animationend',h)});
+  if(reduce)old.classList.remove('leaving','back');
+  nw.classList.remove('back');if(back)nw.classList.add('back');nw.classList.add('active');
+  cur=n;
+  orbs.forEach(function(o,i){o.classList.toggle('on',i===n);o.classList.toggle('done',i<n)});
+  $('#barfill').style.width=((n+1)*25)+'%';
+  prev.hidden=n===0;next.hidden=n===3;send.hidden=n!==3;
+  if(n===3)buildSummary();
+  window.__spin=(back?-1:1)*6;
+  window.__stepTo&&window.__stepTo(n);
+  $('#prog').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+}
+next.addEventListener('click',function(){if(validate(cur))go(cur+1,false)});
+prev.addEventListener('click',function(){go(cur-1,true)});
+
+/* ---------- pdf ---------- */
+function score(){var s=0;QUIZ.forEach(function(it,i){if(parseInt(checked('q'+i),10)===it.a)s++});return s}
+function clean(t){
+  return String(t==null?'':t).replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/[–—]/g,'-').replace(/…/g,'...').replace(/×/g,'x').replace(/²/g,'2').replace(/³/g,'3').replace(/⁸/g,'8').replace(/⁻¹⁹/g,'-19').replace(/[^\x09\x0A\x20-\x7E -ÿ]/g,'?');
+}
+function collect(){
+  var d={
+    ref:'E1-'+Date.now().toString(36).toUpperCase().slice(-6)+Math.floor(Math.random()*90+10),
+    when:new Date().toString(),
+    name:val('name'),email:val('email'),phone:val('phone'),place:val('place'),school:val('school'),level:val('level'),course:val('course'),grad:val('grad'),
+    enrolled:checked('enrolled'),subjects:checkedAll('subjects').join(', '),hours:checked('hours'),device:checked('device'),
+    quiz:QUIZ.map(function(it,i){var v=parseInt(checked('q'+i),10);return {q:it.q,pick:it.o[v],right:it.o[it.a],ok:v===it.a,s:it.s}}),
+    essays:ESS.map(function(e,i){return {t:'Essay '+(i+1)+': '+e.t,p:e.p,a:$('#'+e.id).value.trim()}})
+  };
+  d.score=d.quiz.filter(function(x){return x.ok}).length;return d;
+}
+function buildPdf(d){
+  var J=window.jspdf&&window.jspdf.jsPDF;if(!J)throw new Error('PDF library did not load');
+  var doc=new J({unit:'pt',format:'a4'}),W=595.28,H=841.89,M=48,CW=W-M*2,y=0;
+  function band(){doc.setFillColor(5,8,22);doc.rect(0,0,W,86,'F');doc.setFillColor(53,200,255);doc.rect(0,86,W*.34,4,'F');doc.setFillColor(165,139,255);doc.rect(W*.34,86,W*.33,4,'F');doc.setFillColor(255,107,154);doc.rect(W*.67,86,W*.33,4,'F')}
+  function foot(){var n=doc.getNumberOfPages();for(var i=1;i<=n;i++){doc.setPage(i);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(120,130,155);doc.text('Edu 1 Labs - Beta tester application - '+d.ref,M,H-24);doc.text('Page '+i+' of '+n,W-M,H-24,{align:'right'})}}
+  function need(h){if(y+h>H-50){doc.addPage();y=M}}
+  function head(t){need(40);y+=10;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(53,110,230);doc.text(clean(t).toUpperCase(),M,y);y+=6;doc.setDrawColor(210,220,240);doc.line(M,y,W-M,y);y+=16}
+  function kv(k,v){var lines=doc.splitTextToSize(clean(v||'-'),CW-130);need(lines.length*13+6);doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(90,100,125);doc.text(clean(k),M,y);doc.setFont('helvetica','normal');doc.setTextColor(20,25,45);doc.text(lines,M+130,y);y+=lines.length*13+5}
+  function para(t,sz,bold,col){doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(sz);doc.setTextColor(col[0],col[1],col[2]);var lines=doc.splitTextToSize(clean(t),CW);need(lines.length*(sz+4)+4);doc.text(lines,M,y);y+=lines.length*(sz+4)+4}
+  band();
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(20);doc.text('Beta Tester Application',M,44);
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(170,190,225);doc.text('Edu 1 Labs  |  Reference '+d.ref,M,64);
+  y=118;
+  head('Applicant');kv('Full name',d.name);kv('Email',d.email);kv('Phone / WhatsApp',d.phone);kv('Location',d.place);
+  head('Eligibility');kv('Currently enrolled',d.enrolled);kv('Institution',d.school);kv('Level of study',d.level);kv('Course or class',d.course);kv('Completion year',d.grad);kv('Subjects',d.subjects);kv('Hours per week',d.hours);kv('Main device',d.device);
+  head('Quiz - score '+d.score+' of '+d.quiz.length);
+  d.quiz.forEach(function(x,i){
+    para('Q'+(i+1)+' ('+x.s+'): '+x.q,9.5,true,[20,25,45]);
+    para('Answer: '+x.pick+(x.ok?'  [correct]':'  [incorrect - correct: '+x.right+']'),9.5,false,x.ok?[20,140,90]:[200,60,90]);y+=2;
+  });
+  head('Essays');
+  d.essays.forEach(function(e){para(e.t,10.5,true,[20,25,45]);para(e.p,8.5,false,[110,120,145]);para(e.a,10,false,[30,35,55]);para('('+words(e.a)+' words)',8.5,false,[110,120,145]);y+=8});
+  head('Declaration');para('Applicant confirmed their answers are true, that they are currently enrolled, that they are 18 or older or have guardian consent, and that they agree to be contacted about this role.',9.5,false,[40,45,65]);
+  para('Submitted: '+d.when,8.5,false,[110,120,145]);
+  foot();
+  return {doc:doc,blob:doc.output('blob'),name:'Edu1-Beta-Application-'+clean(d.name).replace(/[^A-Za-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.pdf'};
+}
+
+/* ---------- send ---------- */
+var last=null;
+function tfetch(url,opt,ms){
+  var c=window.AbortController?new AbortController():null,t=setTimeout(function(){c&&c.abort()},ms);
+  if(c)opt.signal=c.signal;
+  return fetch(url,opt).then(function(r){clearTimeout(t);return r},function(e){clearTimeout(t);throw e});
+}
+function supabasePost(d,pdf){
+  var S=CONFIG.supabase;
+  if(!S||!S.url||!S.key)return Promise.resolve({ok:false,msg:'Database not set up (config.js missing or empty).'});
+  var base=S.url.replace(/\/+$/,''),H={apikey:S.key};
+  if(S.key.indexOf('eyJ')===0)H.Authorization='Bearer '+S.key;
+  var path=d.ref+'.pdf',note='';
+  var up=Object.assign({},H,{'Content-Type':'application/pdf'});
+  return tfetch(base+'/storage/v1/object/applications/'+path,{method:'POST',headers:up,body:pdf.blob},20000)
+   .then(function(r){if(r.ok)return path;note='PDF upload failed ('+r.status+'). ';return null},function(){note='PDF upload could not connect. ';return null})
+   .then(function(p){
+     var row={ref:d.ref,name:d.name,email:d.email,phone:d.phone,place:d.place,school:d.school,level:d.level,course:d.course,grad:d.grad,subjects:d.subjects,hours:d.hours,device:d.device,score:d.score,total:d.quiz.length,
+       quiz:d.quiz,essays:d.essays.map(function(e){return {title:e.t,answer:e.a}}),pdf_path:p};
+     var ih=Object.assign({},H,{'Content-Type':'application/json',Prefer:'return=minimal'});
+     return tfetch(base+'/rest/v1/applications',{method:'POST',headers:ih,body:JSON.stringify(row)},20000)
+       .then(function(r){if(r.ok)return {ok:true,msg:''};return r.text().then(function(t){return {ok:false,msg:note+'Database error '+r.status+': '+String(t).slice(0,140)}})},
+             function(){return {ok:false,msg:note+'Database could not be reached. Check the URL in config.js.'}});
+   });
+}
+function show(id){$('#form').style.display='none';$('#prog').style.display='none';$('.bar').style.display='none';$('#ok').classList.remove('show');$('#fail').classList.remove('show');$('#'+id).classList.add('show');$('#portal').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+function hideStatus(){$('#form').style.display='';$('#prog').style.display='';$('.bar').style.display='';$('#ok').classList.remove('show');$('#fail').classList.remove('show')}
+function doSend(){
+  if($('#hp').value)return;
+  if(!validate(3)||busy)return;
+  busy=true;send.disabled=true;$('#sendt').textContent='Sending...';
+  var d=collect(),pdf;
+  try{pdf=buildPdf(d)}catch(err){busy=false;send.disabled=false;$('#sendt').textContent='Send application';last=null;fail('The PDF could not be created: '+err.message);return}
+  last={d:d,pdf:pdf};
+  var fd=new FormData();
+  fd.append('_subject','Edu 1 beta tester application: '+d.name+' ('+d.ref+')');
+  fd.append('_captcha','false');fd.append('_template','table');fd.append('_honey','');
+  fd.append('_autoresponse','Thanks for applying to the Edu 1 Labs beta tester programme. We have received your application ('+d.ref+') and will contact shortlisted applicants.');
+  fd.append('Reference',d.ref);fd.append('Name',d.name);fd.append('email',d.email);fd.append('Phone',d.phone);fd.append('Location',d.place);
+  fd.append('Institution',d.school+' - '+d.level);fd.append('Subjects',d.subjects);fd.append('Quiz score',d.score+' of '+d.quiz.length);
+  fd.append('attachment',pdf.blob,pdf.name);
+  var dbP=supabasePost(d,pdf);
+  var ctl=window.AbortController?new AbortController():null,to=setTimeout(function(){ctl&&ctl.abort()},25000);
+  function done(emailOk,msg){
+    Promise.resolve(dbP).then(function(dbOk){
+      clearTimeout(to);busy=false;send.disabled=false;$('#sendt').textContent='Send application';
+      if(emailOk||(dbOk&&dbOk.ok)){$('#ref').textContent=d.ref;show('ok');window.__spin=14;burst()}
+      else fail('Email: '+msg+' | '+(dbOk&&dbOk.msg?dbOk.msg:'Database: not saved.'));
+    });
+  }
+  fetch(CONFIG.endpoint,{method:'POST',body:fd,headers:{Accept:'application/json'},signal:ctl?ctl.signal:undefined})
+   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,j:j}})})
+   .then(function(x){done(!!(x.ok&&(x.j.success===true||x.j.success==='true')),x.j&&x.j.message?String(x.j.message):'The mail service did not accept the submission.')})
+   .catch(function(){done(false,'The connection failed or was blocked.')});
+}
+function fail(msg){$('#failmsg').textContent=msg+' Your answers are safe on this page. Download the PDF and email it to:';$('#mailaddr').textContent=CONFIG.email;show('fail')}
+$('#form').addEventListener('submit',function(e){e.preventDefault();doSend()});
+$('#retry').addEventListener('click',function(){hideStatus();doSend()});
+$('#dl').addEventListener('click',function(){
+  try{
+    var p=last&&last.pdf?last.pdf:buildPdf(collect());
+    var u=URL.createObjectURL(p.blob),a=document.createElement('a');a.href=u;a.download=p.name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);
+  }catch(err){$('#failmsg').textContent='Could not make the PDF: '+err.message}
+});
+
+/* ---------- 3D tilt + depth reveal ---------- */
+function tilt(el){
+  if(reduce)return;
+  el.addEventListener('pointermove',function(e){
+    if(e.pointerType==='touch')return;
+    var r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    el.style.transform='perspective(900px) rotateY('+(x*16)+'deg) rotateX('+(-y*16)+'deg) translateZ(14px)';
+  });
+  el.addEventListener('pointerleave',function(){el.style.transform=''});
+}
+$$('.card,.fact,.reqs li').forEach(tilt);
+(function(){
+  var els=$$('.rv');
+  if(!('IntersectionObserver' in window)){return}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var t=x.target;t.classList.remove('pre');io.unobserve(t)}})},{threshold:.12});
+  els.forEach(function(el,i){
+    var r=el.getBoundingClientRect();
+    if(r.top>innerHeight){el.style.transitionDelay=((i%4)*90)+'ms';el.classList.add('pre');io.observe(el)}
+  });
+})();
+
+/* ---------- WebGL lab ---------- */
+var burst=function(){};
+(function(){
+  if(!window.THREE)return;
+  var cv=$('#gl'),R;
+  try{R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true})}catch(e){return}
+  R.setPixelRatio(Math.min(devicePixelRatio||1,1.6));
+  var scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(55,1,.1,200);
+  scene.fog=new THREE.FogExp2(0x050816,.03);
+  var TAU=Math.PI*2,world=new THREE.Group();scene.add(world);
+  function glowTex(){var c=document.createElement('canvas');c.width=c.height=64;var g=c.getContext('2d'),gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.3,'rgba(255,255,255,.45)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)}
+  var GT=glowTex();
+  function wire(geo,col,op){return new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:col,wireframe:true,transparent:true,opacity:op,blending:THREE.AdditiveBlending,depthWrite:false}))}
+  function glow(col,s,op){var m=new THREE.Sprite(new THREE.SpriteMaterial({map:GT,color:col,transparent:true,opacity:op==null?1:op,blending:THREE.AdditiveBlending,depthWrite:false}));m.scale.set(s,s,1);return m}
+
+  var knot=wire(new THREE.TorusKnotGeometry(1.7,.45,180,18,2,3),0x35c8ff,.5);knot.position.set(3.2,.6,-2);world.add(knot);
+  var knot2=wire(new THREE.TorusKnotGeometry(1,.25,120,12,3,5),0xff6b9a,.4);knot2.position.set(-5,-3,-5);world.add(knot2);
+
+  var atom=new THREE.Group();atom.position.set(-3.8,1.2,-1);world.add(atom);
+  var nuc=new THREE.Mesh(new THREE.SphereGeometry(.42,24,18),new THREE.MeshBasicMaterial({color:0xffb43a}));atom.add(nuc);atom.add(glow(0xffb43a,2.4,.8));
+  var orbits=[];
+  [[0,0],[1.05,0],[-1.05,0]].forEach(function(t,i){
+    var g=new THREE.Group();g.rotation.x=t[0]*.9;g.rotation.z=i*1.05;
+    var ring=new THREE.Mesh(new THREE.TorusGeometry(1.7,.012,6,96),new THREE.MeshBasicMaterial({color:0x7fe0ff,transparent:true,opacity:.6,blending:THREE.AdditiveBlending,depthWrite:false}));g.add(ring);
+    var e=glow(0x8ff0ff,.7);g.add(e);orbits.push({e:e,ph:i*2.1,sp:1.4+i*.3});atom.add(g);
+  });
+
+  var helix=new THREE.Group();helix.position.set(5.6,-1.6,-4);world.add(helix);
+  var hp=[],hc=[],col=new THREE.Color();
+  for(var i=0;i<90;i++){var t=i/90,a=t*TAU*3.2,y=(t-.5)*8;[0,Math.PI].forEach(function(o,s){hp.push(Math.cos(a+o)*1.1,y,Math.sin(a+o)*1.1);col.set(s?0x4cf0b0:0x35c8ff);hc.push(col.r,col.g,col.b)});
+    if(i%3===0){for(var k=0;k<5;k++){var u=k/4-.5;hp.push(Math.cos(a)*1.1*u*2,y,Math.sin(a)*1.1*u*2);col.set(0xffb43a);hc.push(col.r,col.g,col.b)}}}
+  var hg=new THREE.BufferGeometry();hg.setAttribute('position',new THREE.Float32BufferAttribute(hp,3));hg.setAttribute('color',new THREE.Float32BufferAttribute(hc,3));
+  helix.add(new THREE.Points(hg,new THREE.PointsMaterial({size:.22,map:GT,vertexColors:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})));
+
+  var ico=[];
+  for(i=0;i<16;i++){var m=wire(new THREE.IcosahedronGeometry(.3+Math.random()*.5,0),[0xa58bff,0x35c8ff,0x4cf0b0,0xff6b9a][i%4],.55);
+    m.position.set((Math.random()-.5)*22,(Math.random()-.5)*16,-Math.random()*14-1);m.userData={r:(Math.random()-.5)*.8,b:m.position.clone(),ph:Math.random()*TAU};world.add(m);ico.push(m)}
+  var N=700,pp=new Float32Array(N*3),pc=new Float32Array(N*3);
+  for(i=0;i<N;i++){pp[i*3]=(Math.random()-.5)*50;pp[i*3+1]=(Math.random()-.5)*34;pp[i*3+2]=-Math.random()*40+6;col.setHSL(.5+Math.random()*.3,.9,.65);pc[i*3]=col.r;pc[i*3+1]=col.g;pc[i*3+2]=col.b}
+  var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pp,3));pg.setAttribute('color',new THREE.BufferAttribute(pc,3));
+  var dust=new THREE.Points(pg,new THREE.PointsMaterial({size:.12,map:GT,vertexColors:true,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}));scene.add(dust);
+
+  /* success burst */
+  var BN=240,bp=new Float32Array(BN*3),bv=[],bl=[];
+  for(i=0;i<BN;i++){bp[i*3+1]=-999;bv.push(new THREE.Vector3());bl.push(0)}
+  var bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.BufferAttribute(bp,3));
+  var bpts=new THREE.Points(bg,new THREE.PointsMaterial({size:.35,map:GT,color:0x4cf0b0,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));bpts.frustumCulled=false;scene.add(bpts);
+  burst=function(){for(var j=0;j<BN;j++){bp[j*3]=0;bp[j*3+1]=0;bp[j*3+2]=0;bv[j].set(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize().multiplyScalar(2+Math.random()*7);bl[j]=1.6}};
+
+  function resize(){var w=innerWidth,h=innerHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();var s=Math.min(1,w/h*1.2);world.scale.setScalar(.55+s*.45)}
+  addEventListener('resize',resize);resize();
+
+  var px=0,py=0,tx=0,ty=0,spin=0,stepZ=0,stepT=0,t0=performance.now(),prevT=t0;
+  addEventListener('pointermove',function(e){tx=e.clientX/innerWidth-.5;ty=e.clientY/innerHeight-.5});
+  window.__stepTo=function(n){stepT=n};
+  function frame(now){
+    var dt=Math.min(.05,(now-prevT)/1000);prevT=now;var t=(now-t0)/1000;
+    px+=(tx-px)*(1-Math.exp(-dt*3));py+=(ty-py)*(1-Math.exp(-dt*3));
+    var max=Math.max(1,document.documentElement.scrollHeight-innerHeight),sp=Math.min(1,Math.max(0,scrollY/max));
+    stepZ+=(stepT-stepZ)*(1-Math.exp(-dt*2.5));
+    if(window.__spin){spin+=window.__spin*dt*3;window.__spin*=Math.exp(-dt*2.2);if(Math.abs(window.__spin)<.01)window.__spin=0}
+    var ang=sp*TAU*.55+stepZ*.35+spin*.12;
+    cam.position.set(Math.sin(ang)*9+px*2,1.8-sp*5+py*-1.5,Math.cos(ang)*9+4);
+    cam.lookAt(0,-sp*3,0);cam.rotation.z+=Math.sin(t*.3)*.02+px*.05;
+    knot.rotation.x=t*.25;knot.rotation.y=t*.35+spin*.2;knot2.rotation.x=-t*.3;knot2.rotation.z=t*.2;
+    atom.rotation.y=t*.4;atom.rotation.x=Math.sin(t*.3)*.4;
+    orbits.forEach(function(o){var a=t*o.sp+o.ph;o.e.position.set(Math.cos(a)*1.7,Math.sin(a)*1.7,0)});
+    helix.rotation.y=t*.45+spin*.15;
+    ico.forEach(function(m){m.rotation.x+=m.userData.r*dt;m.rotation.y+=m.userData.r*dt*1.3;m.position.y=m.userData.b.y+Math.sin(t*.6+m.userData.ph)*.6});
+    dust.rotation.y=t*.01+sp*.4;
+    for(var j=0;j<BN;j++){if(bl[j]>0){bl[j]-=dt;bp[j*3]+=bv[j].x*dt;bp[j*3+1]+=bv[j].y*dt;bp[j*3+2]+=bv[j].z*dt;bv[j].multiplyScalar(1-dt*1.4)}else bp[j*3+1]=-999}
+    bg.attributes.position.needsUpdate=true;
+    R.render(scene,cam);
+    if(!reduce)requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  if(reduce)addEventListener('scroll',function(){requestAnimationFrame(frame)},{passive:true});
+})();
+})();
+</script>
+</body>
+</html>
